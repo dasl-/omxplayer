@@ -192,8 +192,12 @@ OMXControlResult OMXControl::getEvent()
   if (!bus)
     return KeyConfig::ACTION_BLANK;
 
+  double dbus_get_event_start = clock->GetAbsoluteClock();
   dispatch();
   DBusMessage *m = dbus_connection_pop_message(bus);
+  double dbus_get_event_elapsed = clock->GetAbsoluteClock() - dbus_get_event_start;
+  CLog::Log(LOGDEBUG, "DASL getEventDbus timer: %.0f us\n", dbus_get_event_elapsed);
+
 
   if (m == NULL)
     return KeyConfig::ACTION_BLANK;
@@ -535,8 +539,15 @@ OMXControlResult OMXControl::handle_event(DBusMessage *m)
         {
           volume=.0;
         }
+        double vol_start = clock->GetAbsoluteClock();
         audio->SetVolume(volume);
+        double vol_elapsed = clock->GetAbsoluteClock() - vol_start;
+        CLog::Log(LOGDEBUG, "DASL SetVolume timer: %.0f us\n", vol_elapsed);
+
+        double dbus_respond_start = clock->GetAbsoluteClock();
         dbus_respond_double(m, volume);
+        double dbus_respond_elapsed = clock->GetAbsoluteClock() - dbus_respond_start;
+        CLog::Log(LOGDEBUG, "DASL dbus_respond_double timer: %.0f us\n", dbus_respond_elapsed);
         return KeyConfig::ACTION_BLANK;
       }
       else if (strcmp(property, "Rate")==0)
