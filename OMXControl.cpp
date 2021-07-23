@@ -240,8 +240,8 @@ OMXControlResult OMXControl::getEvent()
     CLog::Log(LOGDEBUG, "SOCKCTL recvfrom error: %s", strerror(errno));
   } else {
     CLog::Log(LOGDEBUG, "SOCKCTL Received %d bytes from %s", numBytes, claddr.sun_path);
-    double vol_from_sock = atof(buf)
-    if(vol_from_sock < .0)
+    double vol_from_sock = atof(buf);
+    if (vol_from_sock < .0)
     {
       vol_from_sock = 0.0;
     }
@@ -250,7 +250,7 @@ OMXControlResult OMXControl::getEvent()
     string sock_response_temp = "Set volume to: " + to_string(vol_from_sock);
     char sock_response[1024];
     strcpy(sock_response, sock_response_temp.c_str());
-    size_t sock_response_len = strlen(sock_response);
+    ssize_t sock_response_len = strlen(sock_response);
 
     if (sendto(sfd, sock_response, sock_response_len, 0, (struct sockaddr *) &claddr, len) != sock_response_len)
         CLog::Log(LOGDEBUG, "SOCKCTL Failed to sendto");
