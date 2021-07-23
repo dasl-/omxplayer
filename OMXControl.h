@@ -34,14 +34,14 @@ protected:
   OMXPlayerAudio     *audio;
   OMXReader          *reader;
   OMXPlayerSubtitles *subtitles;
-  int sfd;
-  int foo;
 public:
   OMXControl();
   ~OMXControl();
   int init(OMXClock *m_av_clock, OMXPlayerAudio *m_player_audio, OMXPlayerSubtitles *m_player_subtitles, OMXReader *m_omx_reader, std::string& dbus_name);
   OMXControlResult getEvent();
   void dispatch();
+  int sfd;
+  int foo;
 private:
   int dbus_connect(std::string& dbus_name);
   void dbus_disconnect();

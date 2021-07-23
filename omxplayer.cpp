@@ -1015,6 +1015,7 @@ int main(int argc, char *argv[])
     &m_omx_reader,
     m_dbus_name
   );
+  CLog::Log(LOGDEBUG, "SOCKCTL omxplayer.cpp after init: %d, %d", m_omxcontrol.sfd, m_omxcontrol.foo);
   if (false == m_no_keys)
   {
     m_keyboard = new Keyboard();
