@@ -139,8 +139,6 @@ int OMXControl::dbus_connect(std::string& dbus_name)
 
   /********************************** SOCKET *****************************************************/
   struct sockaddr_un svaddr;
-  ssize_t numBytes;
-  socklen_t len;
   char SV_SOCK_PATH[100]="/tmp/omx.sock";
   sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
   if (sfd == -1)
@@ -225,7 +223,7 @@ OMXControlResult OMXControl::getEvent()
   socklen_t len = sizeof(struct sockaddr_un);
   int buf_size = 200;
   char buf[buf_size];
-  numBytes = recvfrom(sfd, buf, buf_size, 0,
+  ssize_t numBytes = recvfrom(sfd, buf, buf_size, 0,
                       (struct sockaddr *) &claddr, &len);
   if (numBytes == -1)
       return KeyConfig::ACTION_EXIT;
