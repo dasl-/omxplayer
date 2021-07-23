@@ -138,6 +138,7 @@ int OMXControl::dbus_connect(std::string& dbus_name)
 {
 
   /********************************** SOCKET *****************************************************/
+  CLog::Log(LOGDEBUG, "SOCKCTL sfd before setup: %d, %d", sfd, foo);
   struct sockaddr_un svaddr;
   char SV_SOCK_PATH[100]="/tmp/omx.sock";
   sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
