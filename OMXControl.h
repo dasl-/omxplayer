@@ -41,7 +41,6 @@ public:
   OMXControlResult getEvent();
   void dispatch();
 private:
-  struct sockaddr_un;
   int dbus_connect(std::string& dbus_name);
   void dbus_disconnect();
   OMXControlResult handle_event(DBusMessage *m);

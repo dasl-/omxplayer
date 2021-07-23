@@ -138,12 +138,9 @@ int OMXControl::dbus_connect(std::string& dbus_name)
 {
 
   /********************************** SOCKET *****************************************************/
-  struct svaddr, claddr;
-  int sfd, j;
+  struct sockaddr_un svaddr;
   ssize_t numBytes;
   socklen_t len;
-  int buf_size = 200;
-  char buf[buf_size];
   char SV_SOCK_PATH[100]="/tmp/omx.sock";
   sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
   if (sfd == -1)
@@ -224,22 +221,26 @@ void OMXControl::dbus_disconnect()
 OMXControlResult OMXControl::getEvent()
 {
   /**************************** SOCKET *************************************************/
+  struct sockaddr_un claddr;
   socklen_t len = sizeof(struct sockaddr_un);
-  // numBytes = recvfrom(sfd, buf, buf_size, 0,
-  //                     (struct sockaddr *) &claddr, &len);
-  // if (numBytes == -1)
-  //     errExit("recvfrom");
+  int buf_size = 200;
+  char buf[buf_size];
+  numBytes = recvfrom(sfd, buf, buf_size, 0,
+                      (struct sockaddr *) &claddr, &len);
+  if (numBytes == -1)
+      return KeyConfig::ACTION_EXIT;
 
   // printf("Server received %ld bytes from %s\n", (long) numBytes,
   //         claddr.sun_path);
   /*FIXME: above: should use %zd here, and remove (long) cast */
 
-  // for (j = 0; j < numBytes; j++)
-  //     buf[j] = toupper((unsigned char) buf[j]);
+  int j;
+  for (j = 0; j < numBytes; j++)
+      buf[j] = toupper((unsigned char) buf[j]);
 
-  // if (sendto(sfd, buf, numBytes, 0, (struct sockaddr *) &claddr, len) !=
-  //         numBytes)
-  //     fatal("sendto");
+  if (sendto(sfd, buf, numBytes, 0, (struct sockaddr *) &claddr, len) !=
+          numBytes)
+      return KeyConfig::ACTION_EXIT;
   /**************************** END SOCKET *************************************************/
 
 
