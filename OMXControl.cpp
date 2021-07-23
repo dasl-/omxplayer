@@ -248,16 +248,17 @@ OMXControlResult OMXControl::getEvent()
     }
     audio->SetVolume(vol_from_sock);
 
-    string sock_response_temp = "Set volume to: " + to_string(vol_from_sock);
-    char sock_response[1024];
-    strcpy(sock_response, sock_response_temp.c_str());
-    ssize_t sock_response_len = strlen(sock_response);
+    // string sock_response_temp = "Set volume to: " + to_string(vol_from_sock);
+    // char sock_response[1024];
+    // strcpy(sock_response, sock_response_temp.c_str());
+    // ssize_t sock_response_len = strlen(sock_response);
 
-    if (sendto(sfd, sock_response, sock_response_len, 0, (struct sockaddr *) &claddr, len) != sock_response_len)
-        CLog::Log(LOGDEBUG, "SOCKCTL Failed to sendto");
+    // if (sendto(sfd, sock_response, sock_response_len, 0, (struct sockaddr *) &claddr, len) != sock_response_len)
+    //     CLog::Log(LOGDEBUG, "SOCKCTL Failed to sendto");
     double get_event_elapsed = clock->GetAbsoluteClock() - get_event_start;
     CLog::Log(LOGDEBUG, "SOCKCTL getEvent timer: %.0f us\n", get_event_elapsed);
   }
+  return KeyConfig::ACTION_BLANK;
 
   /**************************** END SOCKET *************************************************/
 
