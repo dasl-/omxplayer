@@ -1761,7 +1761,7 @@ int main(int argc, char *argv[])
     }
 
     if(!m_omx_pkt) {
-      double read_start = m_av_clock->GetAbsoluteClock()
+      double read_start = m_av_clock->GetAbsoluteClock();
       m_omx_pkt = m_omx_reader.Read();
       double read_elapsed = (m_av_clock->GetAbsoluteClock() - read_start) / 1000;
       CLog::Log(LOGDEBUG, "SOCKCTL m_omx_reader.Read timer: %.0f ms\n", read_elapsed);
