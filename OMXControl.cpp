@@ -125,6 +125,43 @@ int OMXControl::init(OMXClock *m_av_clock, OMXPlayerAudio *m_player_audio, OMXPl
     CLog::Log(LOGDEBUG, "DBus connection succeeded");
     dbus_threads_init_default();
   }
+
+  /********************************** SOCKET *****************************************************/
+  CLog::Log(LOGDEBUG, "SOCKCTL sfd before setup: %d, %d", sfd, foo);
+  struct sockaddr_un svaddr;
+  char SV_SOCK_PATH[100]="/tmp/omx.sock";
+  sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
+  foo = 2;
+  if (sfd == -1) {
+    CLog::Log(LOGDEBUG, "SOCKCTL socket failed");
+  }
+  CLog::Log(LOGDEBUG, "SOCKCTL sfd in setup: %d, %d", sfd, foo);
+
+  /* Construct well-known address and bind server socket to it */
+
+  /* For an explanation of the following check, see the erratum note for
+     page 1168 at http://www.man7.org/tlpi/errata/. */
+
+  if (strlen(SV_SOCK_PATH) > sizeof(svaddr.sun_path) - 1) {
+    CLog::Log(LOGDEBUG, "SOCKCTL strlen failed");
+  }
+
+
+  if (remove(SV_SOCK_PATH) == -1 && errno != ENOENT) {
+    CLog::Log(LOGDEBUG, "SOCKCTL remove failed");
+  }
+
+
+
+  memset(&svaddr, 0, sizeof(struct sockaddr_un));
+  svaddr.sun_family = AF_UNIX;
+  strncpy(svaddr.sun_path, SV_SOCK_PATH, sizeof(svaddr.sun_path) - 1);
+
+  if (bind(sfd, (struct sockaddr *) &svaddr, sizeof(struct sockaddr_un)) == -1) {
+    CLog::Log(LOGDEBUG, "SOCKCTL bind failed");
+  }
+  CLog::Log(LOGDEBUG, "SOCKCTL setup success? sfd in setup after bind: %d, %d", sfd, foo);
+  /********************************** END SOCKET *****************************************************/
   return ret;
 }
 
@@ -136,48 +173,6 @@ void OMXControl::dispatch()
 
 int OMXControl::dbus_connect(std::string& dbus_name)
 {
-
-  /********************************** SOCKET *****************************************************/
-  CLog::Log(LOGDEBUG, "SOCKCTL sfd before setup: %d, %d", sfd, foo);
-  struct sockaddr_un svaddr;
-  char SV_SOCK_PATH[100]="/tmp/omx.sock";
-  sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
-  foo = 2;
-  if (sfd == -1) {
-    CLog::Log(LOGDEBUG, "SOCKCTL socket failed");
-    goto fail;
-  }
-  CLog::Log(LOGDEBUG, "SOCKCTL sfd in setup: %d, %d", sfd, foo);
-
-  /* Construct well-known address and bind server socket to it */
-
-  /* For an explanation of the following check, see the erratum note for
-     page 1168 at http://www.man7.org/tlpi/errata/. */
-
-  if (strlen(SV_SOCK_PATH) > sizeof(svaddr.sun_path) - 1) {
-    CLog::Log(LOGDEBUG, "SOCKCTL strlen failed");
-    goto fail;
-  }
-
-
-  if (remove(SV_SOCK_PATH) == -1 && errno != ENOENT) {
-    CLog::Log(LOGDEBUG, "SOCKCTL remove failed");
-    goto fail;
-  }
-
-
-
-  memset(&svaddr, 0, sizeof(struct sockaddr_un));
-  svaddr.sun_family = AF_UNIX;
-  strncpy(svaddr.sun_path, SV_SOCK_PATH, sizeof(svaddr.sun_path) - 1);
-
-  if (bind(sfd, (struct sockaddr *) &svaddr, sizeof(struct sockaddr_un)) == -1) {
-    CLog::Log(LOGDEBUG, "SOCKCTL bind failed");
-    goto fail;
-  }
-  CLog::Log(LOGDEBUG, "SOCKCTL setup success? sfd in setup after bind: %d, %d", sfd, foo);
-  /********************************** END SOCKET *****************************************************/
-
   DBusError error;
 
   dbus_error_init(&error);
