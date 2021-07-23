@@ -240,18 +240,21 @@ OMXControlResult OMXControl::getEvent()
     CLog::Log(LOGDEBUG, "SOCKCTL recvfrom error: %s", strerror(errno));
   } else {
     CLog::Log(LOGDEBUG, "SOCKCTL Received %d bytes from %s", numBytes, claddr.sun_path);
-    int j;
-    for (j = 0; j < numBytes; j++)
-        buf[j] = toupper((unsigned char) buf[j]);
+    double vol_from_sock = atof(buf)
+    if(vol_from_sock < .0)
+    {
+      vol_from_sock = 0.0;
+    }
+    audio->SetVolume(vol_from_sock);
 
-    if (sendto(sfd, buf, numBytes, 0, (struct sockaddr *) &claddr, len) != numBytes)
+    string sock_response_temp = "Set volume to: " + to_string(vol_from_sock);
+    char sock_response[1024];
+    strcpy(sock_response, sock_response_temp.c_str());
+    size_t sock_response_len = strlen(sock_response);
+
+    if (sendto(sfd, sock_response, sock_response_len, 0, (struct sockaddr *) &claddr, len) != sock_response_len)
         CLog::Log(LOGDEBUG, "SOCKCTL Failed to sendto");
   }
-
-  // printf("Server received %ld bytes from %s\n", (long) numBytes,
-  //         claddr.sun_path);
-  /*FIXME: above: should use %zd here, and remove (long) cast */
-
 
   /**************************** END SOCKET *************************************************/
 
