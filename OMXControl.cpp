@@ -141,7 +141,7 @@ int OMXControl::dbus_connect(std::string& dbus_name)
   struct sockaddr_un svaddr;
   char SV_SOCK_PATH[100]="/tmp/omx.sock";
   sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
-  foo = 2
+  foo = 2;
   if (sfd == -1) {
     CLog::Log(LOGDEBUG, "SOCKCTL socket failed");
     goto fail;
