@@ -255,9 +255,9 @@ OMXControlResult OMXControl::getEvent()
 
     // if (sendto(sfd, sock_response, sock_response_len, 0, (struct sockaddr *) &claddr, len) != sock_response_len)
     //     CLog::Log(LOGDEBUG, "SOCKCTL Failed to sendto");
-    double get_event_elapsed = clock->GetAbsoluteClock() - get_event_start;
-    CLog::Log(LOGDEBUG, "SOCKCTL getEvent timer: %.0f us\n", get_event_elapsed);
   }
+  double get_event_elapsed = clock->GetAbsoluteClock() - get_event_start;
+  CLog::Log(LOGDEBUG, "SOCKCTL getEvent timer: %.0f us\n", get_event_elapsed);
   return KeyConfig::ACTION_BLANK;
 
   /**************************** END SOCKET *************************************************/
