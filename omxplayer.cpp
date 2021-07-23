@@ -1196,9 +1196,12 @@ int main(int argc, char *argv[])
     }
 
      if (update) {
+       double update_event_start = clock->GetAbsoluteClock();
        OMXControlResult result = control_err
                                ? (OMXControlResult)(m_keyboard ? m_keyboard->getEvent() : KeyConfig::ACTION_BLANK)
                                : m_omxcontrol.getEvent();
+       double update_event_elapsed = clock->GetAbsoluteClock() - update_event_start;
+       CLog::Log(LOGDEBUG, "DASL update_event_start timer: %.0f us\n", update_event_elapsed);
        double oldPos, newPos;
 
     switch(result.getKey())
