@@ -145,6 +145,7 @@ int OMXControl::dbus_connect(std::string& dbus_name)
     CLog::Log(LOGDEBUG, "SOCKCTL socket failed");
     goto fail;
   }
+  CLog::Log(LOGDEBUG, "SOCKCTL sfd in setup: %d", sfd);
 
   /* Construct well-known address and bind server socket to it */
 
@@ -235,6 +236,7 @@ OMXControlResult OMXControl::getEvent()
   socklen_t len = sizeof(struct sockaddr_un);
   int buf_size = 200;
   char buf[buf_size];
+  CLog::Log(LOGDEBUG, "SOCKCTL sfd in getEvent: %d", sfd);
   ssize_t numBytes = recvfrom(sfd, buf, buf_size, 0,
                       (struct sockaddr *) &claddr, &len);
   if (numBytes == -1) {
