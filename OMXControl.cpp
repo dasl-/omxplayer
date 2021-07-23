@@ -237,8 +237,10 @@ OMXControlResult OMXControl::getEvent()
   char buf[buf_size];
   ssize_t numBytes = recvfrom(sfd, buf, buf_size, 0,
                       (struct sockaddr *) &claddr, &len);
-  CLog::Log(LOGDEBUG, "SOCKCTL Received %d bytes from %s", numBytes, claddr.sun_path);
-  if (numBytes != -1) {
+  if (numBytes == -1) {
+    CLog::Log(LOGDEBUG, "SOCKCTL recvfrom error: %s", strerror(errno));
+  } else {
+    CLog::Log(LOGDEBUG, "SOCKCTL Received %d bytes from %s", numBytes, claddr.sun_path);
     int j;
     for (j = 0; j < numBytes; j++)
         buf[j] = toupper((unsigned char) buf[j]);
