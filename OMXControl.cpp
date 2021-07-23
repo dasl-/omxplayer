@@ -9,6 +9,7 @@
 #include <sstream>
 #include <utility>
 #include <sys/socket.h>
+#include <sys/un.h>
 
 #include "utils/log.h"
 #include "OMXControl.h"
