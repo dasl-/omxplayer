@@ -138,7 +138,7 @@ int OMXControl::dbus_connect(std::string& dbus_name)
 {
 
   /********************************** SOCKET *****************************************************/
-  struct sockaddr_un svaddr, claddr;
+  struct svaddr, claddr;
   int sfd, j;
   ssize_t numBytes;
   socklen_t len;
@@ -223,6 +223,26 @@ void OMXControl::dbus_disconnect()
 
 OMXControlResult OMXControl::getEvent()
 {
+  /**************************** SOCKET *************************************************/
+  socklen_t len = sizeof(struct sockaddr_un);
+  // numBytes = recvfrom(sfd, buf, buf_size, 0,
+  //                     (struct sockaddr *) &claddr, &len);
+  // if (numBytes == -1)
+  //     errExit("recvfrom");
+
+  // printf("Server received %ld bytes from %s\n", (long) numBytes,
+  //         claddr.sun_path);
+  /*FIXME: above: should use %zd here, and remove (long) cast */
+
+  // for (j = 0; j < numBytes; j++)
+  //     buf[j] = toupper((unsigned char) buf[j]);
+
+  // if (sendto(sfd, buf, numBytes, 0, (struct sockaddr *) &claddr, len) !=
+  //         numBytes)
+  //     fatal("sendto");
+  /**************************** END SOCKET *************************************************/
+
+
   if (!bus)
     return KeyConfig::ACTION_BLANK;
 
