@@ -29,7 +29,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#define FFMPEG_FILE_BUFFER_SIZE   32768
+#define FFMPEG_FILE_BUFFER_SIZE   4096
 
 namespace XFILE
 {
