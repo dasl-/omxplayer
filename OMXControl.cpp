@@ -172,6 +172,7 @@ int OMXControl::dbus_connect(std::string& dbus_name)
     CLog::Log(LOGDEBUG, "SOCKCTL bind failed");
     goto fail;
   }
+  CLog::Log(LOGDEBUG, "SOCKCTL setup success?");
   /********************************** END SOCKET *****************************************************/
 
   DBusError error;
