@@ -142,7 +142,8 @@ int OMXControl::dbus_connect(std::string& dbus_name)
   int sfd, j;
   ssize_t numBytes;
   socklen_t len;
-  char buf[BUF_SIZE];
+  int buf_size = 200;
+  char buf[buf_size];
   char SV_SOCK_PATH[100]="/tmp/omx.sock";
   sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
   if (sfd == -1)
