@@ -510,6 +510,7 @@ OMXPacket *OMXReader::Read()
   pkt.stream_index = MAX_OMX_STREAMS;
 
   RESET_TIMEOUT(1);
+  CLog::Log(LOGDEBUG, "OMXReader::Read SOCKCTL");
   result = m_dllAvFormat.av_read_frame(m_pFormatContext, &pkt);
   if (result < 0)
   {
