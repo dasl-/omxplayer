@@ -35,6 +35,7 @@ protected:
   OMXReader          *reader;
   OMXPlayerSubtitles *subtitles;
   int sfd;
+  int foo;
 public:
   OMXControl();
   ~OMXControl();

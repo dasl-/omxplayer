@@ -141,11 +141,12 @@ int OMXControl::dbus_connect(std::string& dbus_name)
   struct sockaddr_un svaddr;
   char SV_SOCK_PATH[100]="/tmp/omx.sock";
   sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
+  foo = 2
   if (sfd == -1) {
     CLog::Log(LOGDEBUG, "SOCKCTL socket failed");
     goto fail;
   }
-  CLog::Log(LOGDEBUG, "SOCKCTL sfd in setup: %d", sfd);
+  CLog::Log(LOGDEBUG, "SOCKCTL sfd in setup: %d, %d", sfd, foo);
 
   /* Construct well-known address and bind server socket to it */
 
@@ -173,7 +174,7 @@ int OMXControl::dbus_connect(std::string& dbus_name)
     CLog::Log(LOGDEBUG, "SOCKCTL bind failed");
     goto fail;
   }
-  CLog::Log(LOGDEBUG, "SOCKCTL setup success? sfd in setup after bind: %d", sfd);
+  CLog::Log(LOGDEBUG, "SOCKCTL setup success? sfd in setup after bind: %d, %d", sfd, foo);
   /********************************** END SOCKET *****************************************************/
 
   DBusError error;
@@ -236,7 +237,7 @@ OMXControlResult OMXControl::getEvent()
   socklen_t len = sizeof(struct sockaddr_un);
   int buf_size = 200;
   char buf[buf_size];
-  CLog::Log(LOGDEBUG, "SOCKCTL sfd in getEvent: %d", sfd);
+  CLog::Log(LOGDEBUG, "SOCKCTL sfd in getEvent: %d %d", sfd, foo);
   ssize_t numBytes = recvfrom(sfd, buf, buf_size, 0,
                       (struct sockaddr *) &claddr, &len);
   if (numBytes == -1) {
