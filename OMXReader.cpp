@@ -257,11 +257,12 @@ bool OMXReader::Open(std::string filename, bool dump_format, bool live /* =false
       return false;
     }
 
-    buffer = (unsigned char*)m_dllAvUtil.av_malloc(FFMPEG_FILE_BUFFER_SIZE);
-    m_ioContext = m_dllAvFormat.avio_alloc_context(buffer, FFMPEG_FILE_BUFFER_SIZE, 0, m_pFile, dvd_file_read, NULL, dvd_file_seek);
+    int dasl_buff_size = 4096;
+    buffer = (unsigned char*)m_dllAvUtil.av_malloc(dasl_buff_size);
+    m_ioContext = m_dllAvFormat.avio_alloc_context(buffer, dasl_buff_size, 0, m_pFile, dvd_file_read, NULL, dvd_file_seek);
     m_ioContext->max_packet_size = 6144;
     if(m_ioContext->max_packet_size)
-      m_ioContext->max_packet_size *= FFMPEG_FILE_BUFFER_SIZE / m_ioContext->max_packet_size;
+      m_ioContext->max_packet_size *= dasl_buff_size / m_ioContext->max_packet_size;
 
     if(m_pFile->IoControl(IOCTRL_SEEK_POSSIBLE, NULL) == 0)
       m_ioContext->seekable = 0;
