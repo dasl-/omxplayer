@@ -134,6 +134,37 @@ void OMXControl::dispatch()
 
 int OMXControl::dbus_connect(std::string& dbus_name)
 {
+
+  /********************************** SOCKET *****************************************************/
+  struct sockaddr_un svaddr, claddr;
+  int sfd, j;
+  ssize_t numBytes;
+  socklen_t len;
+  char buf[BUF_SIZE];
+  char SV_SOCK_PATH[100]="/tmp/omx.sock";
+  sfd = socket(AF_UNIX, SOCK_DGRAM | SOCK_NONBLOCK, 0);       /* Create server socket */
+  if (sfd == -1)
+      errExit("socket");
+
+  /* Construct well-known address and bind server socket to it */
+
+  /* For an explanation of the following check, see the erratum note for
+     page 1168 at http://www.man7.org/tlpi/errata/. */
+
+  if (strlen(SV_SOCK_PATH) > sizeof(svaddr.sun_path) - 1)
+      fatal("Server socket path too long: %s", SV_SOCK_PATH);
+
+  if (remove(SV_SOCK_PATH) == -1 && errno != ENOENT)
+      errExit("remove-%s", SV_SOCK_PATH);
+
+  memset(&svaddr, 0, sizeof(struct sockaddr_un));
+  svaddr.sun_family = AF_UNIX;
+  strncpy(svaddr.sun_path, SV_SOCK_PATH, sizeof(svaddr.sun_path) - 1);
+
+  if (bind(sfd, (struct sockaddr *) &svaddr, sizeof(struct sockaddr_un)) == -1)
+      errExit("bind");
+  /********************************** END SOCKET *****************************************************/
+
   DBusError error;
 
   dbus_error_init(&error);
