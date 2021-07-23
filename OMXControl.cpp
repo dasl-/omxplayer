@@ -149,18 +149,27 @@ int OMXControl::dbus_connect(std::string& dbus_name)
   /* For an explanation of the following check, see the erratum note for
      page 1168 at http://www.man7.org/tlpi/errata/. */
 
-  if (strlen(SV_SOCK_PATH) > sizeof(svaddr.sun_path) - 1)
-      goto fail;
+  if (strlen(SV_SOCK_PATH) > sizeof(svaddr.sun_path) - 1) {
+    CLog::Log(LOGDEBUG, "SOCKCTL strlen failed");
+    goto fail;
+  }
 
-  if (remove(SV_SOCK_PATH) == -1 && errno != ENOENT)
-      goto fail;
+
+  if (remove(SV_SOCK_PATH) == -1 && errno != ENOENT) {
+    CLog::Log(LOGDEBUG, "SOCKCTL remove failed");
+    goto fail;
+  }
+
+
 
   memset(&svaddr, 0, sizeof(struct sockaddr_un));
   svaddr.sun_family = AF_UNIX;
   strncpy(svaddr.sun_path, SV_SOCK_PATH, sizeof(svaddr.sun_path) - 1);
 
-  if (bind(sfd, (struct sockaddr *) &svaddr, sizeof(struct sockaddr_un)) == -1)
-      goto fail;
+  if (bind(sfd, (struct sockaddr *) &svaddr, sizeof(struct sockaddr_un)) == -1) {
+    CLog::Log(LOGDEBUG, "SOCKCTL bind failed");
+    goto fail;
+  }
   /********************************** END SOCKET *****************************************************/
 
   DBusError error;
