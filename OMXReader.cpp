@@ -257,7 +257,7 @@ bool OMXReader::Open(std::string filename, bool dump_format, bool live /* =false
       return false;
     }
 
-    int dasl_buff_size = 128;
+    int dasl_buff_size = 1024;
     buffer = (unsigned char*)m_dllAvUtil.av_malloc(dasl_buff_size);
     m_ioContext = m_dllAvFormat.avio_alloc_context(buffer, dasl_buff_size, 0, m_pFile, dvd_file_read, NULL, dvd_file_seek);
     m_ioContext->max_packet_size = 6144;
