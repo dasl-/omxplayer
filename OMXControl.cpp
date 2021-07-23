@@ -229,17 +229,18 @@ void OMXControl::dbus_disconnect()
 OMXControlResult OMXControl::getEvent()
 {
   /**************************** SOCKET *************************************************/
+  double get_event_start = clock->GetAbsoluteClock();
   struct sockaddr_un claddr;
   socklen_t len = sizeof(struct sockaddr_un);
   int buf_size = 200;
   char buf[buf_size];
-  CLog::Log(LOGDEBUG, "SOCKCTL sfd in getEvent: %d %d", sfd, foo);
+  // CLog::Log(LOGDEBUG, "SOCKCTL sfd in getEvent: %d %d", sfd, foo);
   ssize_t numBytes = recvfrom(sfd, buf, buf_size, 0,
                       (struct sockaddr *) &claddr, &len);
   if (numBytes == -1) {
-    CLog::Log(LOGDEBUG, "SOCKCTL recvfrom error: %s", strerror(errno));
+    // CLog::Log(LOGDEBUG, "SOCKCTL recvfrom error: %s", strerror(errno));
   } else {
-    CLog::Log(LOGDEBUG, "SOCKCTL Received %d bytes from %s", numBytes, claddr.sun_path);
+    // CLog::Log(LOGDEBUG, "SOCKCTL Received %d bytes from %s", numBytes, claddr.sun_path);
     double vol_from_sock = atof(buf);
     if (vol_from_sock < .0)
     {
@@ -254,6 +255,8 @@ OMXControlResult OMXControl::getEvent()
 
     if (sendto(sfd, sock_response, sock_response_len, 0, (struct sockaddr *) &claddr, len) != sock_response_len)
         CLog::Log(LOGDEBUG, "SOCKCTL Failed to sendto");
+    double get_event_elapsed = clock->GetAbsoluteClock() - get_event_start;
+    CLog::Log(LOGDEBUG, "SOCKCTL getEvent timer: %.0f us\n", get_event_elapsed);
   }
 
   /**************************** END SOCKET *************************************************/
