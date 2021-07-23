@@ -41,6 +41,7 @@ public:
   OMXControlResult getEvent();
   void dispatch();
 private:
+  int sfd;
   int dbus_connect(std::string& dbus_name);
   void dbus_disconnect();
   OMXControlResult handle_event(DBusMessage *m);
