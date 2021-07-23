@@ -225,20 +225,21 @@ OMXControlResult OMXControl::getEvent()
   char buf[buf_size];
   ssize_t numBytes = recvfrom(sfd, buf, buf_size, 0,
                       (struct sockaddr *) &claddr, &len);
-  if (numBytes == -1)
-      return KeyConfig::ACTION_EXIT;
+  CLog::Log(LOGDEBUG, "SOCKCTL Received %d bytes from %s", numBytes, claddr.sun_path);
+  if (numBytes != -1) {
+    int j;
+    for (j = 0; j < numBytes; j++)
+        buf[j] = toupper((unsigned char) buf[j]);
+
+    if (sendto(sfd, buf, numBytes, 0, (struct sockaddr *) &claddr, len) != numBytes)
+        CLog::Log(LOGDEBUG, "SOCKCTL Failed to sendto");
+  }
 
   // printf("Server received %ld bytes from %s\n", (long) numBytes,
   //         claddr.sun_path);
   /*FIXME: above: should use %zd here, and remove (long) cast */
 
-  int j;
-  for (j = 0; j < numBytes; j++)
-      buf[j] = toupper((unsigned char) buf[j]);
 
-  if (sendto(sfd, buf, numBytes, 0, (struct sockaddr *) &claddr, len) !=
-          numBytes)
-      return KeyConfig::ACTION_EXIT;
   /**************************** END SOCKET *************************************************/
 
 
