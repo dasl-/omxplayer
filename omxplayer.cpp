@@ -116,6 +116,8 @@ bool              m_has_subtitle        = false;
 bool              m_gen_log             = false;
 bool              m_loop                = false;
 bool              m_start_paused        = false;
+bool              audio_fifo_high       = false;
+bool              video_fifo_high       = false;
 
 enum{ERROR=-1,SUCCESS,ONEBYTE};
 
@@ -1189,7 +1191,6 @@ int main(int argc, char *argv[])
   m_av_clock->OMXStateExecute();
   sentStarted = true;
 
-  bool audio_fifo_low = false, video_fifo_low = false, audio_fifo_high = false, video_fifo_high = false;
   while(!m_stop)
   {
     if(g_abort)
@@ -1667,7 +1668,8 @@ int main(int argc, char *argv[])
       float audio_fifo = audio_pts == DVD_NOPTS_VALUE ? 0.0f : audio_pts / DVD_TIME_BASE - stamp * 1e-6;
       float video_fifo = video_pts == DVD_NOPTS_VALUE ? 0.0f : video_pts / DVD_TIME_BASE - stamp * 1e-6;
       float threshold = std::min(0.1f, (float)m_player_audio.GetCacheTotal() * 0.1f);
-      audio_fifo_low = false, video_fifo_low = false, audio_fifo_high = false, video_fifo_high = false;
+      bool audio_fifo_low = false, video_fifo_low = false;
+      audio_fifo_high = false, video_fifo_high = false;
 
       if(m_stats)
       {
