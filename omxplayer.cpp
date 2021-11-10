@@ -771,6 +771,7 @@ int main(int argc, char *argv[])
         break;
       case start_paused:
         m_Pause = true;
+        m_start_paused = true;
         break;
       case font_opt:
         m_font_path = optarg;
@@ -1195,7 +1196,13 @@ int main(int argc, char *argv[])
 
     double now = m_av_clock->GetAbsoluteClock();
     bool update = false;
-    if (m_last_check_time == 0.0 || m_last_check_time + DVD_MSEC_TO_TIME(20) <= now) 
+    if (
+      m_last_check_time == 0.0 || m_last_check_time + DVD_MSEC_TO_TIME(20) <= now ||
+      // Check for dbus events more frequently while we're waiting for the unpause signal when using
+      // the `--start-paused` option. This enables an unpause signal to be sent to multiple omxplayer
+      // instances in sync.
+      (m_start_paused && m_Pause && (m_last_check_time + DVD_MSEC_TO_TIME(2) <= now))
+    )
     {
       update = true;
       m_last_check_time = now;
