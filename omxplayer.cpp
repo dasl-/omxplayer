@@ -1646,6 +1646,19 @@ int main(int argc, char *argv[])
 
     if (update)
     {
+      // We also run the same unpause logic a few lines down. But when we are using the `--start-paused` option,
+      // we want to hit resume as soon as possible, before running potentially expensive video processing logic
+      // in between here and the next unpause block. Running this expensive logic could result in out of sync
+      // unpauses between multiple omxplayer instances to the extent that the execution time differs.
+      if(m_start_paused && !m_config_audio.is_live && !m_Pause && (audio_fifo_high && video_fifo_high))
+      {
+        if (m_av_clock->OMXIsPaused())
+        {
+          CLog::Log(LOGDEBUG, "Resume %s,%s (%s,%s,%d,%d) EOF:%d PKT:%p\n", "-", "-", "-", "-", audio_fifo_high, video_fifo_high, m_omx_reader.IsEof(), m_omx_pkt);
+          m_av_clock->OMXResume();
+        }
+      }
+
       /* when the video/audio fifos are low, we pause clock, when high we resume */
       double stamp = m_av_clock->OMXMediaTime();
       double audio_pts = m_player_audio.GetCurrentPTS();
