@@ -795,9 +795,9 @@ OMXControlResult OMXControl::handle_event(DBusMessage *m)
   }
   else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PLAYER, "Play"))
   {
-    CLog::Log(LOGDEBUG, "Starting dbus OK response for Play command")
+    CLog::Log(LOGDEBUG, "Starting dbus OK response for Play command");
     dbus_respond_ok(m);
-    CLog::Log(LOGDEBUG, "Finished dbus OK response for Play command")
+    CLog::Log(LOGDEBUG, "Finished dbus OK response for Play command");
     return KeyConfig::ACTION_PLAY;
   }
   else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PLAYER, "PlayPause"))
