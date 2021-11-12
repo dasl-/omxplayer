@@ -469,54 +469,54 @@ OMXControlResult OMXControl::handle_event(DBusMessage *m)
     dbus_message_iter_init(m, &args);
     if(dbus_message_iter_has_next(&args))
     {
-		//The interface name
-		if( DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&args) ) 
-			dbus_message_iter_get_basic (&args, &interface);
-		else
-		{
-			printf("setE1\n");
-			CLog::Log(LOGWARNING, "Unhandled dbus message, member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
-			dbus_error_free(&error);
-			dbus_respond_error(m, DBUS_ERROR_INVALID_ARGS, "Invalid arguments");
-			return KeyConfig::ACTION_BLANK;
-		}
-		//The property name
-		if( dbus_message_iter_next(&args) && DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&args) )
-			dbus_message_iter_get_basic (&args, &property);
-		else
-		{
-			CLog::Log(LOGWARNING, "Unhandled dbus message, member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
-			dbus_error_free(&error);
-			dbus_respond_error(m, DBUS_ERROR_INVALID_ARGS, "Invalid arguments");
-			return KeyConfig::ACTION_BLANK;
-		}
-		//The value (either double or double in variant)
-		if (dbus_message_iter_next(&args))
-		{
-			//Simply a double
-			if (DBUS_TYPE_DOUBLE == dbus_message_iter_get_arg_type(&args))
-			{
-				dbus_message_iter_get_basic(&args, &new_property_value);
-			}
-			//A double within a variant
-			else if(DBUS_TYPE_VARIANT == dbus_message_iter_get_arg_type(&args))
-			{
-				DBusMessageIter variant;
-				dbus_message_iter_recurse(&args, &variant);
-				if(DBUS_TYPE_DOUBLE == dbus_message_iter_get_arg_type(&variant))
-				{
-					dbus_message_iter_get_basic(&variant, &new_property_value);
-				}
-			}
-			else
-			{
-				CLog::Log(LOGWARNING, "Unhandled dbus message, member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
-				dbus_error_free(&error);
-				dbus_respond_error(m, DBUS_ERROR_INVALID_ARGS, "Invalid arguments");
-				return KeyConfig::ACTION_BLANK;
-			}
-		}
-	}
+  		//The interface name
+  		if( DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&args) )
+  			dbus_message_iter_get_basic (&args, &interface);
+  		else
+  		{
+  			printf("setE1\n");
+  			CLog::Log(LOGWARNING, "Unhandled dbus message, member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
+  			dbus_error_free(&error);
+  			dbus_respond_error(m, DBUS_ERROR_INVALID_ARGS, "Invalid arguments");
+  			return KeyConfig::ACTION_BLANK;
+  		}
+  		//The property name
+  		if( dbus_message_iter_next(&args) && DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&args) )
+  			dbus_message_iter_get_basic (&args, &property);
+  		else
+  		{
+  			CLog::Log(LOGWARNING, "Unhandled dbus message, member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
+  			dbus_error_free(&error);
+  			dbus_respond_error(m, DBUS_ERROR_INVALID_ARGS, "Invalid arguments");
+  			return KeyConfig::ACTION_BLANK;
+  		}
+  		//The value (either double or double in variant)
+  		if (dbus_message_iter_next(&args))
+  		{
+  			//Simply a double
+  			if (DBUS_TYPE_DOUBLE == dbus_message_iter_get_arg_type(&args))
+  			{
+  				dbus_message_iter_get_basic(&args, &new_property_value);
+  			}
+  			//A double within a variant
+  			else if(DBUS_TYPE_VARIANT == dbus_message_iter_get_arg_type(&args))
+  			{
+  				DBusMessageIter variant;
+  				dbus_message_iter_recurse(&args, &variant);
+  				if(DBUS_TYPE_DOUBLE == dbus_message_iter_get_arg_type(&variant))
+  				{
+  					dbus_message_iter_get_basic(&variant, &new_property_value);
+  				}
+  			}
+  			else
+  			{
+  				CLog::Log(LOGWARNING, "Unhandled dbus message, member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
+  				dbus_error_free(&error);
+  				dbus_respond_error(m, DBUS_ERROR_INVALID_ARGS, "Invalid arguments");
+  				return KeyConfig::ACTION_BLANK;
+  			}
+  		}
+  	}
     if ( dbus_error_is_set(&error) )
     {
         CLog::Log(LOGWARNING, "Unhandled dbus message, member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
