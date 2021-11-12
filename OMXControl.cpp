@@ -199,6 +199,7 @@ OMXControlResult OMXControl::getEvent()
     return KeyConfig::ACTION_BLANK;
 
   CLog::Log(LOGDEBUG, "Popped message member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
+  CLog::Log(LOGDEBUG, "DBUS_DEBUG after message pop");
   OMXControlResult result = handle_event(m);
   dbus_message_unref(m);
 
@@ -207,9 +208,17 @@ OMXControlResult OMXControl::getEvent()
 
 OMXControlResult OMXControl::handle_event(DBusMessage *m)
 {
+  if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PLAYER, "Play"))
+  {
+    CLog::Log(LOGDEBUG, "DBUS_DEBUG Starting dbus OK response for Play command");
+    dbus_respond_ok(m);
+    CLog::Log(LOGDEBUG, "DBUS_DEBUG Finished dbus OK response for Play command");
+    return KeyConfig::ACTION_PLAY;
+  }
+
   //----------------------------DBus root interface-----------------------------
   //Methods:
-  if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_ROOT, "Quit"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_ROOT, "Quit"))
   {
     dbus_respond_ok(m);//Note: No reply according to MPRIS2 specs
     return KeyConfig::ACTION_EXIT;
@@ -792,13 +801,6 @@ OMXControlResult OMXControl::handle_event(DBusMessage *m)
   {
     dbus_respond_ok(m);
     return KeyConfig::ACTION_PAUSE;
-  }
-  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PLAYER, "Play"))
-  {
-    CLog::Log(LOGDEBUG, "Starting dbus OK response for Play command");
-    dbus_respond_ok(m);
-    CLog::Log(LOGDEBUG, "Finished dbus OK response for Play command");
-    return KeyConfig::ACTION_PLAY;
   }
   else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PLAYER, "PlayPause"))
   {
