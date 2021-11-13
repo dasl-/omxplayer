@@ -189,15 +189,20 @@ void OMXControl::dbus_disconnect()
 
 OMXControlResult OMXControl::getEvent()
 {
+  CLog::Log(LOGDEBUG, "DBUS_DEBUG entered getEvent");
   if (!bus)
     return KeyConfig::ACTION_BLANK;
 
+  CLog::Log(LOGDEBUG, "DBUS_DEBUG before dispatch");
   dispatch();
+  CLog::Log(LOGDEBUG, "DBUS_DEBUG after dispatch");
   DBusMessage *m = dbus_connection_pop_message(bus);
+  CLog::Log(LOGDEBUG, "DBUS_DEBUG after dbus_connection_pop_message");
 
   if (m == NULL)
     return KeyConfig::ACTION_BLANK;
 
+  CLog::Log(LOGDEBUG, "DBUS_DEBUG before message pop");
   CLog::Log(LOGDEBUG, "Popped message member: %s interface: %s type: %d path: %s", dbus_message_get_member(m), dbus_message_get_interface(m), dbus_message_get_type(m), dbus_message_get_path(m) );
   CLog::Log(LOGDEBUG, "DBUS_DEBUG after message pop");
   OMXControlResult result = handle_event(m);
