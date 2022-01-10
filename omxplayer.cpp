@@ -123,6 +123,7 @@ enum{ERROR=-1,SUCCESS,ONEBYTE};
 
 void sig_handler(int s)
 {
+  CLog::Log(LOGDEBUG, "sig_handler: %d", s);
   if (s==SIGINT && !g_abort)
   {
      signal(SIGINT, SIG_DFL);
