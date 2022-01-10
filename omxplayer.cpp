@@ -500,10 +500,39 @@ static void blank_background(uint32_t rgba)
 
 int main(int argc, char *argv[])
 {
+  CLog::Log(LOGDEBUG, "registering signal handler...");
   signal(SIGSEGV, sig_handler);
   signal(SIGABRT, sig_handler);
   signal(SIGFPE, sig_handler);
   signal(SIGINT, sig_handler);
+
+  signal(SIGHUP, sig_handler);
+  signal(SIGQUIT, sig_handler);
+  signal(SIGILL, sig_handler);
+  signal(SIGTRAP, sig_handler);
+  signal(SIGBUS, sig_handler);
+  signal(SIGKILL, sig_handler);
+  signal(SIGUSR1, sig_handler);
+  signal(SIGUSR2, sig_handler);
+  signal(SIGPIPE, sig_handler);
+  signal(SIGALRM, sig_handler);
+  signal(SIGTERM, sig_handler);
+  signal(SIGSTKFLT, sig_handler);
+  signal(SIGCHLD, sig_handler);
+  signal(SIGCONT, sig_handler);
+  signal(SIGSTOP, sig_handler);
+  signal(SIGTSTP, sig_handler);
+  signal(SIGTTIN, sig_handler);
+  signal(SIGTTOU, sig_handler);
+  signal(SIGURG, sig_handler);
+  signal(SIGXCPU, sig_handler);
+  signal(SIGXFSZ, sig_handler);
+  signal(SIGVTALRM, sig_handler);
+  signal(SIGPROF, sig_handler);
+  signal(SIGWINCH, sig_handler);
+  signal(SIGPOLL, sig_handler);
+  signal(SIGPWR, sig_handler);
+  signal(SIGSYS, sig_handler);
 
   bool                  m_send_eos            = false;
   bool                  m_packet_after_seek   = false;
