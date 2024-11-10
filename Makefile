@@ -68,7 +68,7 @@ keys.h: README.md Makefile
 
 omxplayer.1: README.md
 	sed -e '/DOWNLOADING/,/omxplayer-dist/ d; /DBUS/,$$ d' $< >MAN
-	# curl -F page=@MAN http://mantastic.herokuapp.com 2>/dev/null >$@
+	echo 'N/A' >$@
 
 clean:
 	for i in $(OBJS); do (if test -e "$$i"; then ( rm $$i ); fi ); done
